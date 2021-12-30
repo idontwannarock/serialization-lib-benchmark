@@ -12,7 +12,7 @@ public class TablePrinter {
 
     public void printHeader() {
         System.out.println("Executed " + formatWithThousandSeparator(ROUNDS) + " rounds (serialization + deserialization) of each serializers.");
-        System.out.println("All time unit is second.");
+        System.out.println("All time units are in second.");
         System.out.println(formatResult("Serializer", "Tot. Time", "Avg. Time", "Tot. Ser. Time", "Avg. Ser. Time", "Tot. Des. Time", "Avg. Des. Time"));
     }
 

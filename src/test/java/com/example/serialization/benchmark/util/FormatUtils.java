@@ -1,12 +1,10 @@
 package com.example.serialization.benchmark.util;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class FormatUtils {
 
-    private final static NumberFormat formatter = NumberFormat.getCurrencyInstance();
-    private final static String THOUSAND_SEPARATOR_FORMAT = "%,f";
+    private final static String THOUSAND_SEPARATOR_FORMAT = "%,d";
 
     private final static DecimalFormat totalFormatter = new DecimalFormat("0.000");
     private final static DecimalFormat averageFormatter = new DecimalFormat("0.000000000");
