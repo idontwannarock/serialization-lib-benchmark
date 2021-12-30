@@ -6,11 +6,11 @@ public class GsonSerializer {
 
     private final Gson gson = new Gson();
 
-    public String serialize(GsonSmallObject object) {
+    public String serialize(GsonPassenger object) {
         return gson.toJson(object);
     }
 
-    public GsonSmallObject deserialize(String serializedString) {
-        return gson.fromJson(serializedString, GsonSmallObject.class);
+    public GsonPassenger deserialize(String serializedString) {
+        return gson.fromJson(serializedString, GsonPassenger.class);
     }
 }

@@ -1,13 +1,14 @@
 package com.example.serialization.benchmark.gson;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(fluent = true)
-public class GsonSmallObject {
+public class GsonPassenger {
 
     private Integer id;
     private String firstName;
     private String lastName;
+    private Boolean isMale;
+    private GsonTicket ticket;
+    private GsonBelonging[] belongings;
 }

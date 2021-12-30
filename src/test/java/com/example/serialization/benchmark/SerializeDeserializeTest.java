@@ -1,39 +1,58 @@
 package com.example.serialization.benchmark;
 
+import com.example.serialization.benchmark.gson.GsonPassenger;
+import com.example.serialization.benchmark.gson.GsonPassengerMockFactory;
 import com.example.serialization.benchmark.gson.GsonSerializer;
-import com.example.serialization.benchmark.gson.GsonSmallObject;
+import com.example.serialization.benchmark.helper.TablePrinter;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class SerializeDeserializeTest {
 
     private final static int ROUNDS = 1_000_000;
 
+    private final static TablePrinter printer = new TablePrinter(ROUNDS);
+
     private final GsonSerializer serializer = new GsonSerializer();
 
+    @BeforeClass
+    public static void setup() {
+        printer.printHeader();
+    }
+
     @Test
-    public void gson_serialize_deserialize_small_object_test() {
-        // arrange
-        GsonSmallObject object = new GsonSmallObject().id(1).firstName("Hello").lastName("World");
-        long totalCostTimeInMilliseconds = 0;
+    public void gson_serialize_deserialize_test() {
+        PassengerMockFactory<GsonPassenger> passengerMockFactory = new GsonPassengerMockFactory(ROUNDS);
+        GsonPassenger passenger;
+        long startTime;
+        long totalSerializationCostInMillis = 0;
+        long totalDeserializationCostInMillis = 0;
 
-        // act
         for (int round = 0; round < ROUNDS; round++) {
-            long startTime = System.currentTimeMillis();
-
             try {
+                // arrange
+                passenger = passengerMockFactory.generateMockPassenger(round);
+
+                // act
                 // serialize object
-                String serializedResult = serializer.serialize(object);
+                startTime = System.currentTimeMillis();
+                String serializedResult = serializer.serialize(passenger);
+                totalSerializationCostInMillis += (System.currentTimeMillis() - startTime);
 
                 // deserialize string
-                serializer.deserialize(serializedResult);
+                startTime = System.currentTimeMillis();
+                GsonPassenger result = serializer.deserialize(serializedResult);
+                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
+
+                // assert
+                assertEquals(passenger, result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            totalCostTimeInMilliseconds += (System.currentTimeMillis() - startTime);
         }
-        System.out.print("Using Gson to serialize/deserialize small object " + ROUNDS + " times costs total of " + totalCostTimeInMilliseconds + " milliseconds");
-        System.out.println(", averaging " + ((float) totalCostTimeInMilliseconds / ROUNDS ) + " milliseconds per serialize and deserialize.");
-    }
 
+        printer.printResult("Gson", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+    }
 }
