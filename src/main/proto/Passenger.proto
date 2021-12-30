@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package protobuf;
+
+option java_multiple_files = true;
+option java_package = "com.example.serialization.benchmark.protobuf";
+option java_generate_equals_and_hash = true;
+option java_string_check_utf8 = true;
+option java_outer_classname = "PassengerProto";
+
+message ProtoPassenger {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  bool isMale = 4;
+  ProtoTicket ticket = 5;
+  repeated ProtoBelonging belongings = 6;
+}
+
+message ProtoBelonging {
+  int32 id = 1;
+  BelongingType type = 2;
+  float weightInKilogram = 3;
+
+  enum BelongingType {
+    SUITCASE = 0;
+    BACKPACK = 1;
+  }
+}
+
+message ProtoTicket {
+  int32 id = 1;
+  Transportation transportation = 2;
+  Currency currency = 3;
+  string price = 4;
+  Location departure = 5;
+  string departureTime = 6;
+  Location arrival = 7;
+  string arrivalTime = 8;
+
+  enum Transportation {
+    AIRLINE = 0;
+    TRAIN = 1;
+  }
+
+  enum Currency {
+    USE = 0;
+    NTD = 1;
+  }
+
+  enum Location {
+    TPE = 0;
+    TSA = 1;
+    NRT = 2;
+    LAX = 3;
+  }
+}
