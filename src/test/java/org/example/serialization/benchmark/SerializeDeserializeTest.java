@@ -1,9 +1,9 @@
-package com.example.serialization.benchmark;
+package org.example.serialization.benchmark;
 
-import com.example.serialization.benchmark.gson.GsonPassenger;
-import com.example.serialization.benchmark.gson.GsonPassengerMockFactory;
-import com.example.serialization.benchmark.gson.GsonSerializer;
-import com.example.serialization.benchmark.helper.TablePrinter;
+import org.example.serialization.benchmark.gson.GsonPassenger;
+import org.example.serialization.benchmark.gson.GsonPassengerMockFactory;
+import org.example.serialization.benchmark.gson.GsonSerializer;
+import org.example.serialization.benchmark.helper.TablePrinter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

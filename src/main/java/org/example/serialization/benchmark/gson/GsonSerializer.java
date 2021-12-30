@@ -1,4 +1,4 @@
-package com.example.serialization.benchmark.gson;
+package org.example.serialization.benchmark.gson;
 
 import com.google.gson.Gson;
 

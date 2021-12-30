@@ -1,6 +1,6 @@
-package com.example.serialization.benchmark.helper;
+package org.example.serialization.benchmark.helper;
 
-import static com.example.serialization.benchmark.util.FormatUtils.*;
+import static org.example.serialization.benchmark.util.FormatUtils.*;
 
 public class TablePrinter {
 

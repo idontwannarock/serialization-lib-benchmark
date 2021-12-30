@@ -1,6 +1,6 @@
-package com.example.serialization.benchmark.gson;
+package org.example.serialization.benchmark.gson;
 
-import com.example.serialization.benchmark.PassengerMockFactory;
+import org.example.serialization.benchmark.PassengerMockFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

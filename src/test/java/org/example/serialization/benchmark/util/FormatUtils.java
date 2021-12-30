@@ -1,4 +1,4 @@
-package com.example.serialization.benchmark.util;
+package org.example.serialization.benchmark.util;
 
 import java.text.DecimalFormat;
 
