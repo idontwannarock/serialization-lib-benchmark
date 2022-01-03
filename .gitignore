@@ -225,3 +225,7 @@ buildNumber.properties
 !.vscode/*.code-snippets
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,eclipse,visualstudiocode,maven
+
+# Custom Ignore
+
+src/main/java/org/example/serialization/benchmark/protobuf/*
