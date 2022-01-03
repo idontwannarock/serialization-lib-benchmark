@@ -3,10 +3,13 @@ package org.example.serialization.benchmark.gson;
 import org.example.serialization.benchmark.PassengerMockFactory;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassenger> {
+
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private final int ROUNDS;
 
@@ -71,19 +74,19 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
         return round / 2 == 0 ? GsonTicket.Location.TSA : GsonTicket.Location.TPE;
     }
 
-    private LocalDateTime generateMockDepartureTime(int round) {
-        return LocalDateTime.now().plusMinutes(round);
+    private String generateMockDepartureTime(int round) {
+        return OffsetDateTime.now().plusMinutes(round).format(formatter);
     }
 
     private GsonTicket.Location generateMockArrival(int round) {
         return round / 2 == 0 ? GsonTicket.Location.NRT : GsonTicket.Location.LAX;
     }
 
-    private LocalDateTime generateMockArrivalTime(GsonTicket.Location arrival, LocalDateTime departureTime) {
+    private String generateMockArrivalTime(GsonTicket.Location arrival, String departureTime) {
         if (arrival == GsonTicket.Location.NRT) {
-            return departureTime.plusHours(5);
+            return OffsetDateTime.parse(departureTime, formatter).plusHours(5).format(formatter);
         } else {
-            return departureTime.plusHours(13);
+            return OffsetDateTime.parse(departureTime, formatter).plusHours(13).format(formatter);
         }
     }
 
@@ -95,11 +98,11 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
         return GsonTicket.Currency.USD;
     }
 
-    private BigDecimal generateTicketPrice(GsonTicket.Location arrival) {
+    private String generateTicketPrice(GsonTicket.Location arrival) {
         if (arrival == GsonTicket.Location.NRT) {
-            return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(100.0, 1000.0));
+            return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(100.0, 1000.0)).toPlainString();
         } else {
-            return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000.0, 5000.0));
+            return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000.0, 5000.0)).toPlainString();
         }
     }
 }

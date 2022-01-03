@@ -11,11 +11,11 @@ public class GsonTicket {
     private Integer id;
     private Transportation transportation;
     private Currency currency;
-    private BigDecimal price;
+    private String price;
     private Location departure;
-    private LocalDateTime departureTime;
+    private String departureTime;
     private Location arrival;
-    private LocalDateTime arrivalTime;
+    private String arrivalTime;
 
     public enum Location {
         TPE, TSA, NRT, LAX,
