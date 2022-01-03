@@ -10,8 +10,8 @@ Comparing among Gson, Protocol Buffers, and FlatBuffers
 
 ## TL;DR
 
-Run the script first to generate classes from .proto file.
+Run the script first to generate classes from .proto file and .fbs file.
 
 ```batch
-.\init.sh
+.\init.bat
 ```

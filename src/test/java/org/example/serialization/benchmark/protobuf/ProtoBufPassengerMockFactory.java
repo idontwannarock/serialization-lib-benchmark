@@ -20,7 +20,7 @@ public class ProtoBufPassengerMockFactory implements PassengerMockFactory<ProtoP
                 .setId(round + 1)
                 .setFirstName("Hello")
                 .setLastName("World")
-                .setIsMale(generateGender(round))
+                .setIsMale(generateMockGender(round))
                 .addAllBelongings(generateMockBelongings(round))
                 .setTicket(generateMockTicket(round))
                 .build();

@@ -230,3 +230,5 @@ buildNumber.properties
 
 src/main/java/org/example/serialization/benchmark/protobuf/*
 !src/main/java/org/example/serialization/benchmark/protobuf/ProtoBufSerializer.java
+src/main/java/org/example/serialization/benchmark/flatbuf/*
+!src/main/java/org/example/serialization/benchmark/flatbuf/FlatBufSerializer.java

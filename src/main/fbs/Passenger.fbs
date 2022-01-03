@@ -1,0 +1,37 @@
+namespace org.example.serialization.benchmark.flatbuf;
+
+enum FlatBelongingType : ubyte {SUITCASE, BACKPACK}
+
+table FlatBelonging {
+    id:int;
+    type:FlatBelongingType;
+    weight_in_kilogram:float;
+}
+
+enum FlatTransportation : ubyte {AIRLINE, TRAIN}
+
+enum FlatCurrency : ubyte {USD, NTD}
+
+enum FlatLocation : ubyte {TPE, TSA, NRT, LAX}
+
+table FlatTicket {
+    id:int;
+    transportation:FlatTransportation;
+    currency:FlatCurrency;
+    price:string;
+    departure:FlatLocation;
+    departure_time:string;
+    arrival:FlatLocation;
+    arrival_time:string;
+}
+
+table FlatPassenger {
+    id:int;
+    first_name:string;
+    last_name:string;
+    is_male:bool;
+    ticket:FlatTicket;
+    belongings:[FlatBelonging];
+}
+
+root_type FlatPassenger;

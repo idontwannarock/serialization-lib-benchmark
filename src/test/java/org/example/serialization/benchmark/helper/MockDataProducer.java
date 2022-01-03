@@ -9,7 +9,7 @@ public class MockDataProducer {
 
     private final static DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-    public static Boolean generateGender(int round) {
+    public static Boolean generateMockGender(int round) {
         return round / 2 == 0;
     }
 

@@ -18,7 +18,7 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
         passenger.setId(round + 1);
         passenger.setFirstName("Hello");
         passenger.setLastName("World");
-        passenger.setIsMale(generateGender(round));
+        passenger.setIsMale(generateMockGender(round));
         passenger.setBelongings(generateMockBelongings(round));
         passenger.setTicket(generateTicket(round));
         return passenger;
