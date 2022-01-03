@@ -44,7 +44,7 @@ message ProtoTicket {
   }
 
   enum Currency {
-    USE = 0;
+    USD = 0;
     NTD = 1;
   }
 
