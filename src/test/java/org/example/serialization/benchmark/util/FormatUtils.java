@@ -9,7 +9,7 @@ public class FormatUtils {
     private final static DecimalFormat totalFormatter = new DecimalFormat("0.000");
     private final static DecimalFormat averageFormatter = new DecimalFormat("0.000000000");
 
-    public static String formatWithThousandSeparator(int number) {
+    public static String formatWithThousandSeparator(long number) {
         return String.format(THOUSAND_SEPARATOR_FORMAT, number);
     }
 
@@ -21,8 +21,8 @@ public class FormatUtils {
         return averageFormatter.format(timeInSeconds);
     }
 
-    public static String formatResult(String format, String serializer, String cost, String avgCost, String serCost, String avgSerCost, String desCost, String avgDesCost) {
-        return String.format(format, serializer, cost, avgCost, serCost, avgSerCost, desCost, avgDesCost);
+    public static String formatResult(String format, String serializer, String cost, String avgCost, String serCost, String avgSerCost, String desCost, String avgDesCost, String maxUsedMemory) {
+        return String.format(format, serializer, cost, avgCost, serCost, avgSerCost, desCost, avgDesCost, maxUsedMemory);
     }
 
     private FormatUtils() {}

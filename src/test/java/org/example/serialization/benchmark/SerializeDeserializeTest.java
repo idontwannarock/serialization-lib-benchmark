@@ -1,9 +1,12 @@
 package org.example.serialization.benchmark;
 
+import com.google.common.testing.GcFinalization;
 import org.example.serialization.benchmark.flatbuf.*;
 import org.example.serialization.benchmark.gson.*;
 import org.example.serialization.benchmark.helper.TablePrinter;
 import org.example.serialization.benchmark.protobuf.*;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,8 +26,14 @@ public class SerializeDeserializeTest {
     private final FlatBufSerializer flatBufSerializer = new FlatBufSerializer();
 
     @BeforeClass
-    public static void setup() {
+    public static void startup() {
         printer.printHeader();
+    }
+
+    @Before
+    public void setup() {
+        //noinspection UnstableApiUsage
+        GcFinalization.awaitFullGc();
     }
 
     @Test
@@ -34,6 +43,7 @@ public class SerializeDeserializeTest {
         long startTime;
         long totalSerializationCostInMillis = 0;
         long totalDeserializationCostInMillis = 0;
+        long maxUsedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
         for (int round = 0; round < ROUNDS; round++) {
             try {
@@ -43,6 +53,7 @@ public class SerializeDeserializeTest {
                 // serialize object
                 String serializedResult = gsonSerializer.serialize(passenger);
                 totalSerializationCostInMillis += (System.currentTimeMillis() - startTime);
+                maxUsedMemory = Math.max(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), maxUsedMemory);
 
                 // deserialize string
                 startTime = System.currentTimeMillis();
@@ -60,13 +71,14 @@ public class SerializeDeserializeTest {
                 assertEquals(generateMockGsonArrival(round), result.getTicket().getArrival());
                 assertEquals(GsonTicket.Currency.USD, result.getTicket().getCurrency());
                 totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
+                maxUsedMemory = Math.max(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), maxUsedMemory);
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
             }
         }
 
-        printer.printResult("Gson", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+        printer.printResult("Gson", totalSerializationCostInMillis, totalDeserializationCostInMillis, maxUsedMemory);
     }
 
     private GsonBelonging.BelongingType generateMockGsonBelongingType(int round) {
@@ -88,6 +100,7 @@ public class SerializeDeserializeTest {
         long startTime;
         long totalSerializationCostInMillis = 0;
         long totalDeserializationCostInMillis = 0;
+        long maxUsedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
         for (int round = 0; round < ROUNDS; round++) {
             try {
@@ -97,6 +110,7 @@ public class SerializeDeserializeTest {
                 // serialize object
                 byte[] serializedResult = protoBufSerializer.serialize(passenger);
                 totalSerializationCostInMillis += (System.currentTimeMillis() - startTime);
+                maxUsedMemory = Math.max(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), maxUsedMemory);
 
                 // deserialize string
                 startTime = System.currentTimeMillis();
@@ -114,13 +128,14 @@ public class SerializeDeserializeTest {
                 assertEquals(generateMockProtoArrival(round), result.getTicket().getArrival());
                 assertEquals(ProtoTicket.Currency.USD, result.getTicket().getCurrency());
                 totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
+                maxUsedMemory = Math.max(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), maxUsedMemory);
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
             }
         }
 
-        printer.printResult("ProtoBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+        printer.printResult("ProtoBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis, maxUsedMemory);
     }
 
     private ProtoBelonging.BelongingType generateMockProtoBelongingType(int round) {
@@ -142,6 +157,7 @@ public class SerializeDeserializeTest {
         long startTime;
         long totalSerializationCostInMillis = 0;
         long totalDeserializationCostInMillis = 0;
+        long maxUsedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
         for (int round = 0; round < ROUNDS; round++) {
             try {
@@ -149,6 +165,7 @@ public class SerializeDeserializeTest {
                 // serialize object
                 passenger = passengerMockFactory.generateMockPassenger(round);
                 totalSerializationCostInMillis += (System.currentTimeMillis() - startTime);
+                maxUsedMemory = Math.max(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), maxUsedMemory);
 
                 // deserialize string
                 startTime = System.currentTimeMillis();
@@ -165,13 +182,14 @@ public class SerializeDeserializeTest {
                 assertEquals(generateMockFlatArrival(round), result.ticket().arrival());
                 assertEquals(FlatCurrency.USD, result.ticket().currency());
                 totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
+                maxUsedMemory = Math.max(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(), maxUsedMemory);
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
             }
         }
 
-        printer.printResult("FlatBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+        printer.printResult("FlatBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis, maxUsedMemory);
     }
 
     private int generateMockFlatBelongingType(int round) {
@@ -184,5 +202,11 @@ public class SerializeDeserializeTest {
 
     private int generateMockFlatArrival(int round) {
         return round / 2 == 0 ? FlatLocation.NRT : FlatLocation.LAX;
+    }
+
+    @After
+    public void teardown() {
+        //noinspection UnstableApiUsage
+        GcFinalization.awaitFullGc();
     }
 }
