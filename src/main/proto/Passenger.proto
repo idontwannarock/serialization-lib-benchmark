@@ -3,7 +3,7 @@ syntax = "proto3";
 package protobuf;
 
 option java_multiple_files = true;
-option java_package = "com.example.serialization.benchmark.protobuf";
+option java_package = "org.example.serialization.benchmark.protobuf";
 option java_generate_equals_and_hash = true;
 option java_string_check_utf8 = true;
 option java_outer_classname = "PassengerProto";
