@@ -4,6 +4,9 @@ import org.example.serialization.benchmark.gson.GsonPassenger;
 import org.example.serialization.benchmark.gson.GsonPassengerMockFactory;
 import org.example.serialization.benchmark.gson.GsonSerializer;
 import org.example.serialization.benchmark.helper.TablePrinter;
+import org.example.serialization.benchmark.protobuf.ProtoBufPassengerMockFactory;
+import org.example.serialization.benchmark.protobuf.ProtoBufSerializer;
+import org.example.serialization.benchmark.protobuf.ProtoPassenger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,7 +18,8 @@ public class SerializeDeserializeTest {
 
     private final static TablePrinter printer = new TablePrinter(ROUNDS);
 
-    private final GsonSerializer serializer = new GsonSerializer();
+    private final GsonSerializer gsonSerializer = new GsonSerializer();
+    private final ProtoBufSerializer protoBufSerializer = new ProtoBufSerializer();
 
     @BeforeClass
     public static void setup() {
@@ -38,12 +42,12 @@ public class SerializeDeserializeTest {
                 // act
                 // serialize object
                 startTime = System.currentTimeMillis();
-                String serializedResult = serializer.serialize(passenger);
+                String serializedResult = gsonSerializer.serialize(passenger);
                 totalSerializationCostInMillis += (System.currentTimeMillis() - startTime);
 
                 // deserialize string
                 startTime = System.currentTimeMillis();
-                GsonPassenger result = serializer.deserialize(serializedResult);
+                GsonPassenger result = gsonSerializer.deserialize(serializedResult);
                 totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
 
                 // assert
@@ -56,4 +60,40 @@ public class SerializeDeserializeTest {
 
         printer.printResult("Gson", totalSerializationCostInMillis, totalDeserializationCostInMillis);
     }
+
+    @Test
+    public void protobuf_serialize_deserialize_test() {
+        PassengerMockFactory<ProtoPassenger> passengerMockFactory = new ProtoBufPassengerMockFactory(ROUNDS);
+        ProtoPassenger passenger;
+        long startTime;
+        long totalSerializationCostInMillis = 0;
+        long totalDeserializationCostInMillis = 0;
+
+        for (int round = 0; round < ROUNDS; round++) {
+            try {
+                // arrange
+                passenger = passengerMockFactory.generateMockPassenger(round);
+
+                // act
+                // serialize object
+                startTime = System.currentTimeMillis();
+                byte[] serializedResult = protoBufSerializer.serialize(passenger);
+                totalSerializationCostInMillis += (System.currentTimeMillis() - startTime);
+
+                // deserialize string
+                startTime = System.currentTimeMillis();
+                ProtoPassenger result = protoBufSerializer.deserialize(serializedResult);
+                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
+
+                // assert
+                assertEquals(passenger, result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+
+        printer.printResult("ProtoBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+    }
+
 }

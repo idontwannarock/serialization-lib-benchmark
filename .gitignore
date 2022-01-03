@@ -229,3 +229,4 @@ buildNumber.properties
 # Custom Ignore
 
 src/main/java/org/example/serialization/benchmark/protobuf/*
+!src/main/java/org/example/serialization/benchmark/protobuf/ProtoBufSerializer.java
