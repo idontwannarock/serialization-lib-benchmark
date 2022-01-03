@@ -1,13 +1,9 @@
 package org.example.serialization.benchmark;
 
 import org.example.serialization.benchmark.flatbuf.*;
-import org.example.serialization.benchmark.gson.GsonPassenger;
-import org.example.serialization.benchmark.gson.GsonPassengerMockFactory;
-import org.example.serialization.benchmark.gson.GsonSerializer;
+import org.example.serialization.benchmark.gson.*;
 import org.example.serialization.benchmark.helper.TablePrinter;
-import org.example.serialization.benchmark.protobuf.ProtoBufPassengerMockFactory;
-import org.example.serialization.benchmark.protobuf.ProtoBufSerializer;
-import org.example.serialization.benchmark.protobuf.ProtoPassenger;
+import org.example.serialization.benchmark.protobuf.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -51,9 +47,19 @@ public class SerializeDeserializeTest {
                 // deserialize string
                 startTime = System.currentTimeMillis();
                 GsonPassenger result = gsonSerializer.deserialize(serializedResult);
-                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
-
                 assertEquals(passenger, result);
+                assertEquals(Integer.valueOf(round + 1), result.getId());
+                assertEquals("Hello", result.getFirstName());
+                assertEquals("World", result.getLastName());
+                assertEquals(generateMockGender(round), result.getIsMale());
+                assertEquals(Integer.valueOf(1), result.getBelongings()[0].getId());
+                assertEquals(generateMockGsonBelongingType(round), result.getBelongings()[0].getType());
+                assertEquals(Integer.valueOf(round + ROUNDS), result.getTicket().getId());
+                assertEquals(GsonTicket.Transportation.AIRLINE, result.getTicket().getTransportation());
+                assertEquals(generateMockGsonDeparture(round), result.getTicket().getDeparture());
+                assertEquals(generateMockGsonArrival(round), result.getTicket().getArrival());
+                assertEquals(GsonTicket.Currency.USD, result.getTicket().getCurrency());
+                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
@@ -61,6 +67,18 @@ public class SerializeDeserializeTest {
         }
 
         printer.printResult("Gson", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+    }
+
+    private GsonBelonging.BelongingType generateMockGsonBelongingType(int round) {
+        return round / 2 == 0 ? GsonBelonging.BelongingType.SUITCASE : GsonBelonging.BelongingType.BACKPACK;
+    }
+
+    private GsonTicket.Location generateMockGsonDeparture(int round) {
+        return round / 2 == 0 ? GsonTicket.Location.TSA : GsonTicket.Location.TPE;
+    }
+
+    private GsonTicket.Location generateMockGsonArrival(int round) {
+        return round / 2 == 0 ? GsonTicket.Location.NRT : GsonTicket.Location.LAX;
     }
 
     @Test
@@ -83,10 +101,19 @@ public class SerializeDeserializeTest {
                 // deserialize string
                 startTime = System.currentTimeMillis();
                 ProtoPassenger result = protoBufSerializer.deserialize(serializedResult);
-                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
-
-                // assert
                 assertEquals(passenger, result);
+                assertEquals(round + 1, result.getId());
+                assertEquals("Hello", result.getFirstName());
+                assertEquals("World", result.getLastName());
+                assertEquals(generateMockGender(round), result.getIsMale());
+                assertEquals(1, result.getBelongings(0).getId());
+                assertEquals(generateMockProtoBelongingType(round), result.getBelongings(0).getType());
+                assertEquals(round + ROUNDS, result.getTicket().getId());
+                assertEquals(ProtoTicket.Transportation.AIRLINE, result.getTicket().getTransportation());
+                assertEquals(generateMockProtoDeparture(round), result.getTicket().getDeparture());
+                assertEquals(generateMockProtoArrival(round), result.getTicket().getArrival());
+                assertEquals(ProtoTicket.Currency.USD, result.getTicket().getCurrency());
+                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
@@ -94,6 +121,18 @@ public class SerializeDeserializeTest {
         }
 
         printer.printResult("ProtoBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis);
+    }
+
+    private ProtoBelonging.BelongingType generateMockProtoBelongingType(int round) {
+        return round / 2 == 0 ? ProtoBelonging.BelongingType.SUITCASE : ProtoBelonging.BelongingType.BACKPACK;
+    }
+
+    private ProtoTicket.Location generateMockProtoDeparture(int round) {
+        return round / 2 == 0 ? ProtoTicket.Location.TSA : ProtoTicket.Location.TPE;
+    }
+
+    private ProtoTicket.Location generateMockProtoArrival(int round) {
+        return round / 2 == 0 ? ProtoTicket.Location.NRT : ProtoTicket.Location.LAX;
     }
 
     @Test
@@ -114,19 +153,18 @@ public class SerializeDeserializeTest {
                 // deserialize string
                 startTime = System.currentTimeMillis();
                 FlatPassenger result = flatBufSerializer.deserialize(passenger);
-                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
-
                 assertEquals(round + 1, result.id());
                 assertEquals("Hello", result.firstName());
                 assertEquals("World", result.lastName());
                 assertEquals(generateMockGender(round), result.isMale());
                 assertEquals(1, result.belongings(0).id());
-                assertEquals(generateMockBelongingType(round), result.belongings(0).type());
+                assertEquals(generateMockFlatBelongingType(round), result.belongings(0).type());
                 assertEquals(round + ROUNDS, result.ticket().id());
                 assertEquals(FlatTransportation.AIRLINE, result.ticket().transportation());
-                assertEquals(generateMockDeparture(round), result.ticket().departure());
-                assertEquals(generateMockArrival(round), result.ticket().arrival());
+                assertEquals(generateMockFlatDeparture(round), result.ticket().departure());
+                assertEquals(generateMockFlatArrival(round), result.ticket().arrival());
                 assertEquals(FlatCurrency.USD, result.ticket().currency());
+                totalDeserializationCostInMillis += (System.currentTimeMillis() - startTime);
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
@@ -136,15 +174,15 @@ public class SerializeDeserializeTest {
         printer.printResult("FlatBuf", totalSerializationCostInMillis, totalDeserializationCostInMillis);
     }
 
-    private int generateMockBelongingType(int round) {
+    private int generateMockFlatBelongingType(int round) {
         return round / 2 == 0 ? FlatBelongingType.SUITCASE : FlatBelongingType.BACKPACK;
     }
 
-    private int generateMockDeparture(int round) {
+    private int generateMockFlatDeparture(int round) {
         return round / 2 == 0 ? FlatLocation.TSA : FlatLocation.TPE;
     }
 
-    private int generateMockArrival(int round) {
+    private int generateMockFlatArrival(int round) {
         return round / 2 == 0 ? FlatLocation.NRT : FlatLocation.LAX;
     }
 }
