@@ -2,14 +2,9 @@ package org.example.serialization.benchmark.gson;
 
 import org.example.serialization.benchmark.PassengerMockFactory;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.ThreadLocalRandom;
+import static org.example.serialization.benchmark.helper.MockDataProducer.*;
 
 public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassenger> {
-
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private final int ROUNDS;
 
@@ -27,10 +22,6 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
         passenger.setBelongings(generateMockBelongings(round));
         passenger.setTicket(generateTicket(round));
         return passenger;
-    }
-
-    private Boolean generateGender(int round) {
-        return round / 2 == 0;
     }
 
     private GsonBelonging[] generateMockBelongings(int round) {
@@ -51,9 +42,9 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
 
     private int generateMockBelongingWeightWith(GsonBelonging.BelongingType type) {
         if (type == GsonBelonging.BelongingType.BACKPACK) {
-            return ThreadLocalRandom.current().nextInt(1_000, 5_000 + 1);
+            return generateRandomBackPackWeightInKilogram();
         } else {
-            return ThreadLocalRandom.current().nextInt(10_000, 25_000 + 1);
+            return generateRandomSuitcaseWeightInKilogram();
         }
     }
 
@@ -70,12 +61,12 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
         return ticket;
     }
 
-    private GsonTicket.Location generateMockDeparture(int round) {
-        return round / 2 == 0 ? GsonTicket.Location.TSA : GsonTicket.Location.TPE;
+    private GsonTicket.Transportation generateMockTransportation() {
+        return GsonTicket.Transportation.AIRLINE;
     }
 
-    private String generateMockDepartureTime(int round) {
-        return OffsetDateTime.now().plusMinutes(round).format(formatter);
+    private GsonTicket.Location generateMockDeparture(int round) {
+        return round / 2 == 0 ? GsonTicket.Location.TSA : GsonTicket.Location.TPE;
     }
 
     private GsonTicket.Location generateMockArrival(int round) {
@@ -84,14 +75,10 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
 
     private String generateMockArrivalTime(GsonTicket.Location arrival, String departureTime) {
         if (arrival == GsonTicket.Location.NRT) {
-            return OffsetDateTime.parse(departureTime, formatter).plusHours(5).format(formatter);
+            return generateMockNrtArrivalTime(departureTime);
         } else {
-            return OffsetDateTime.parse(departureTime, formatter).plusHours(13).format(formatter);
+            return generateMockLaxArrivalTime(departureTime);
         }
-    }
-
-    private GsonTicket.Transportation generateMockTransportation() {
-        return GsonTicket.Transportation.AIRLINE;
     }
 
     private GsonTicket.Currency generateMockCurrency() {
@@ -100,9 +87,9 @@ public class GsonPassengerMockFactory implements PassengerMockFactory<GsonPassen
 
     private String generateTicketPrice(GsonTicket.Location arrival) {
         if (arrival == GsonTicket.Location.NRT) {
-            return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(100.0, 1000.0)).toPlainString();
+            return generateRandomNrtTicketPrice();
         } else {
-            return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000.0, 5000.0)).toPlainString();
+            return generateRandomLaxTicketPrice();
         }
     }
 }
