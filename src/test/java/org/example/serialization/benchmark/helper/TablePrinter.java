@@ -4,6 +4,8 @@ import static org.example.serialization.benchmark.util.FormatUtils.*;
 
 public class TablePrinter {
 
+    private final static String RESULT_FORMAT = "| %-21s | %-5s | %-11s | %-22s | %-21s | %-24s | %-23s |";
+
     private final int ROUNDS;
 
     public TablePrinter(int rounds) {
@@ -13,7 +15,7 @@ public class TablePrinter {
     public void printHeader() {
         System.out.println("Executed " + formatWithThousandSeparator(ROUNDS) + " rounds (serialization + deserialization) of each serializers.");
         System.out.println("All time units are in second.");
-        System.out.println(formatResult("Serializer", "Tot. Time", "Avg. Time", "Tot. Ser. Time", "Avg. Ser. Time", "Tot. Des. Time", "Avg. Des. Time"));
+        System.out.println(formatResult(RESULT_FORMAT, "Serialization Library", "Total", "Avg.", "Total In Serialization", "Avg. In Serialization", "Total In Deserialization", "Avg. In Deserialization"));
     }
 
     public void printResult(String serializer, long totalSerializationCostInMillis, long totalDeserializationCostInMillis) {
@@ -31,6 +33,6 @@ public class TablePrinter {
         String desCost = formatTotalDuration((double) totalDeserializationCostInMillis / 1000);
         String avgDesCost = formatAverageDuration((double) totalDeserializationCostInMillis / 1000 / ROUNDS);
 
-        System.out.println(formatResult(serializer, cost, avgCost, serCost, avgSerCost, desCost, avgDesCost));
+        System.out.println(formatResult(RESULT_FORMAT, serializer, cost, avgCost, serCost, avgSerCost, desCost, avgDesCost));
     }
 }
