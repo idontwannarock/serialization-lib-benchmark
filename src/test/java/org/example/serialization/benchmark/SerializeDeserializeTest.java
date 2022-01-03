@@ -50,6 +50,7 @@ public class SerializeDeserializeTest {
                 assertEquals(passenger, result);
             } catch (Exception e) {
                 e.printStackTrace();
+                break;
             }
         }
 
