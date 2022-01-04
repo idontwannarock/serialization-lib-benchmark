@@ -5,10 +5,7 @@ import org.example.serialization.benchmark.flatbuf.FlatBufSerializer;
 import org.example.serialization.benchmark.gson.GsonSerializer;
 import org.example.serialization.benchmark.helper.TablePrinter;
 import org.example.serialization.benchmark.protobuf.ProtoBufSerializer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.nio.ByteBuffer;
 
@@ -151,5 +148,10 @@ public class SerializeDeserializeTest {
     public void teardown() {
         //noinspection UnstableApiUsage
         GcFinalization.awaitFullGc();
+    }
+
+    @AfterClass
+    public static void shutdown() {
+        printer.printFooter();
     }
 }

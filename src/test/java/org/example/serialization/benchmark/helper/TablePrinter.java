@@ -13,9 +13,11 @@ public class TablePrinter {
     }
 
     public void printHeader() {
-        System.out.println("Executed " + formatWithThousandSeparator(ROUNDS) + " rounds (serialization + deserialization) of each serializers.");
+        System.out.println();
+        System.out.println("Executed " + formatWithThousandSeparator(ROUNDS) + " rounds (serialization + deserialization) for each serializers.");
         System.out.println("All time units are in second.");
-        System.out.println("Memory usage unit is byte");
+        System.out.println("Memory usage unit is byte.");
+        System.out.println();
         System.out.println(formatResult(RESULT_FORMAT, "Serialization Library", "Total", "Avg.", "Total In Serialization", "Avg. In Serialization", "Total In Deserialization", "Avg. In Deserialization", "Max. Used Memory"));
     }
 
@@ -38,5 +40,9 @@ public class TablePrinter {
         String maxUsedMemory = formatWithThousandSeparator(maxUsedMemoryInBytes);
 
         System.out.println(formatResult(RESULT_FORMAT, serializer, cost, avgCost, serCost, avgSerCost, desCost, avgDesCost, maxUsedMemory));
+    }
+
+    public void printFooter() {
+        System.out.println();
     }
 }
