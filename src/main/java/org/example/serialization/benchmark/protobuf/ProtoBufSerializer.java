@@ -1,14 +1,19 @@
 package org.example.serialization.benchmark.protobuf;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.example.serialization.benchmark.Passenger;
 
 public class ProtoBufSerializer {
 
-    public byte[] serialize(ProtoPassenger passenger) {
-        return passenger.toByteArray();
+    private static final ProtoPassengerMapper mapper = new ProtoPassengerMapper();
+
+    public ProtoBufSerializer() {}
+
+    public byte[] serialize(Passenger passenger) {
+        return mapper.map(passenger).toByteArray();
     }
 
-    public ProtoPassenger deserialize(byte[] serializedResult) throws InvalidProtocolBufferException {
-        return ProtoPassenger.parseFrom(serializedResult);
+    public Passenger deserialize(byte[] serializedResult) throws InvalidProtocolBufferException {
+        return mapper.map(ProtoPassenger.parseFrom(serializedResult));
     }
 }

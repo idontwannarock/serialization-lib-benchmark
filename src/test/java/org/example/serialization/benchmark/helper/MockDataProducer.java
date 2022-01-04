@@ -13,12 +13,12 @@ public class MockDataProducer {
         return round / 2 == 0;
     }
 
-    public static int generateRandomBackPackWeightInKilogram() {
-        return ThreadLocalRandom.current().nextInt(1_000, 5_000 + 1);
+    public static float generateRandomBackPackWeightInKilogram() {
+        return (float) ThreadLocalRandom.current().nextDouble(1, 10);
     }
 
-    public static int generateRandomSuitcaseWeightInKilogram() {
-        return ThreadLocalRandom.current().nextInt(10_000, 25_000 + 1);
+    public static float generateRandomSuitcaseWeightInKilogram() {
+        return (float) ThreadLocalRandom.current().nextDouble(10, 25);
     }
 
     public static String generateMockDepartureTime(int round) {
@@ -33,12 +33,24 @@ public class MockDataProducer {
         return OffsetDateTime.parse(departureTime, formatter).plusHours(13).format(formatter);
     }
 
-    public static String generateRandomNrtTicketPrice() {
-        return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(100.0, 1000.0)).toPlainString();
+    public static String generateRandomNrtTicketPriceString() {
+        return generateRandomNrtTicketPrice().toPlainString();
     }
 
-    public static String generateRandomLaxTicketPrice() {
-        return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000.0, 5000.0)).toPlainString();
+    public static BigDecimal generateRandomNrtTicketPrice() {
+        return generateRandomPriceInRange(100.0, 1000.0);
+    }
+
+    private static BigDecimal generateRandomPriceInRange(double origin, double bound) {
+        return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(origin, bound));
+    }
+
+    public static String generateRandomLaxTicketPriceString() {
+        return generateRandomLaxTicketPrice().toPlainString();
+    }
+
+    public static BigDecimal generateRandomLaxTicketPrice() {
+        return generateRandomPriceInRange(1000.0, 5000.0);
     }
 
     private MockDataProducer() {}
