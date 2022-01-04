@@ -14,4 +14,5 @@ Run the script first to generate classes from .proto file and .fbs file.
 
 ```batch
 .\init.bat
+mvn test
 ```
