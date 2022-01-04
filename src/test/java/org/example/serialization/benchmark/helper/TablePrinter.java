@@ -15,6 +15,7 @@ public class TablePrinter {
     public void printHeader() {
         System.out.println("Executed " + formatWithThousandSeparator(ROUNDS) + " rounds (serialization + deserialization) of each serializers.");
         System.out.println("All time units are in second.");
+        System.out.println("Memory usage unit is byte");
         System.out.println(formatResult(RESULT_FORMAT, "Serialization Library", "Total", "Avg.", "Total In Serialization", "Avg. In Serialization", "Total In Deserialization", "Avg. In Deserialization", "Max. Used Memory"));
     }
 
